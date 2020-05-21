@@ -13,9 +13,6 @@ repositories {
 }
 
 dependencies {
-    // logger
-    implementation 'org.slf4j:slf4j-api:1.7.12'
-    implementation 'org.slf4j:slf4j-simple:1.7.12'
     // grpc
     implementation 'com.google.api.grpc:googleapis-common-protos:0.0.3'
     implementation 'io.grpc:grpc-netty-shaded:1.29.0'

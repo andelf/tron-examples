@@ -12,6 +12,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.Arrays;
+import org.bouncycastle.jcajce.provider.digest.SHA256;
 
 /**
  * Converts between an array of bytes and a Base58Check string. Not instantiable.
@@ -43,7 +44,12 @@ public final class Base58Check {
   // Returns a new byte array by concatenating the given array with its checksum.
   static byte[] addCheckHash(byte[] data) {
     try {
-      byte[] hash = Arrays.copyOf(Sha256.getDoubleHash(data).toBytes(), 4);
+      SHA256.Digest digest = new SHA256.Digest();
+      digest.update(data);
+      byte[] hash0 = digest.digest();
+      digest.reset();
+      digest.update(hash0);
+      byte[] hash = Arrays.copyOf(digest.digest(), 4);
       ByteArrayOutputStream buf = new ByteArrayOutputStream();
       buf.write(data);
       buf.write(hash);
@@ -59,7 +65,14 @@ public final class Base58Check {
     byte[] concat = base58ToRawBytes(s);
     byte[] data = Arrays.copyOf(concat, concat.length - 4);
     byte[] hash = Arrays.copyOfRange(concat, concat.length - 4, concat.length);
-    byte[] rehash = Arrays.copyOf(Sha256.getDoubleHash(data).toBytes(), 4);
+
+    SHA256.Digest digest = new SHA256.Digest();
+    digest.update(data);
+    byte[] hash0 = digest.digest();
+    digest.reset();
+    digest.update(hash0);
+
+    byte[] rehash = Arrays.copyOf(digest.digest(), 4);
     if (!Arrays.equals(rehash, hash))
       throw new IllegalArgumentException("Checksum mismatch");
     return data;
