@@ -40,7 +40,7 @@ public class TronClient {
                                .setToAddress(ByteString.copyFrom(rawTo))
                                .setAmount(amount)
                                .build();
-    logger.info("transfer => ", req.toString());
+    logger.info("transfer => " + req.toString());
 
     TransactionExtention txnExt = blockingStub.createTransaction2(req);
     logger.info("txn id => " + Hex.toHexString(txnExt.getTxid().toByteArray()));
