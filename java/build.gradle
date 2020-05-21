@@ -1,0 +1,63 @@
+plugins {
+    id 'application'
+    id 'com.google.protobuf' version '0.8.8'
+}
+
+apply plugin: 'java'
+
+version = '0.0.1'
+sourceCompatibility = '1.8'
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    // logger
+    implementation 'org.slf4j:slf4j-api:1.7.12'
+    implementation 'org.slf4j:slf4j-simple:1.7.12'
+    // grpc
+    implementation 'com.google.api.grpc:googleapis-common-protos:0.0.3'
+    implementation 'io.grpc:grpc-netty-shaded:1.29.0'
+    implementation 'io.grpc:grpc-protobuf:1.29.0'
+    implementation 'io.grpc:grpc-stub:1.29.0'
+    compileOnly 'org.apache.tomcat:annotations-api:6.0.53' // necessary for Java 9+
+    // secp256k1
+    implementation 'org.bouncycastle:bcprov-jdk15on:1.65'
+    implementation 'org.apache.tuweni:tuweni-bytes:1.0.0'
+    implementation 'org.apache.tuweni:tuweni-units:1.0.0'
+    implementation 'com.google.guava:guava:29.0-jre'
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir 'src'
+        }
+    }
+}
+//To run the class name from command line using gradle run
+mainClassName = 'com.example.Application'
+
+jar {
+    manifest {
+      /* groovylint-disable-next-line SpaceAroundMapEntryColon */
+        attributes 'Main-Class': 'com.example.Application'
+    }
+}
+
+protobuf {
+    protoc {
+        artifact = 'com.google.protobuf:protoc:3.11.0'
+    }
+    plugins {
+        grpc {
+            artifact = 'io.grpc:protoc-gen-grpc-java:1.29.0'
+        }
+    }
+    generateProtoTasks {
+        all()*.plugins {
+            grpc { }
+        }
+    }
+}
