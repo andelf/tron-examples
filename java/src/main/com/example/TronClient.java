@@ -51,7 +51,7 @@ public class TronClient {
         txnExt.getTransaction().toBuilder().addSignature(ByteString.copyFrom(sig.encodedBytes().toArray())).build();
 
     logger.info(signedTxn.toString());
-    // Return ret = blockingStub.broadcastTransaction(signedTxn);
-    // logger.info("======== Result ========\n" + ret.toString());
+    Return ret = blockingStub.broadcastTransaction(signedTxn);
+    logger.info("======== Result ========\n" + ret.toString());
   }
 }
