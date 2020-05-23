@@ -73,6 +73,10 @@ transfer = {
 resp = requests.post(API_BASE_URL + '/wallet/createtransaction', json=transfer)
 payload = resp.json()
 
+if 'Error' in payload:
+    pprint(payload)
+    raise SystemExit
+
 print('=> add memo to transaction')
 payload['raw_data']['data'] = MEMO.encode().hex()
 
@@ -83,6 +87,7 @@ transaction = payload['transaction']['transaction']
 
 print("txID", transaction['txID'])
 
+print('=> sign transaction')
 raw_data = bytes.fromhex(transaction['raw_data_hex'])
 
 signature = sign(raw_data, priv_key)
